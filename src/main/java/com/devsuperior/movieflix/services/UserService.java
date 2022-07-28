@@ -30,30 +30,28 @@ public class UserService implements UserDetailsService {
 
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllPaged(Pageable pageable) {
-		Page<User> list = repository.findAll( pageable);
+		Page<User> list = repository.findAll(pageable);
 		return list.map(x -> new UserDTO(x));
 	}
 
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
 		authService.validateSelfOrAdmin(id);
-		Optional<User > obj = repository.findById(id);
-		User  entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		Optional<User> obj = repository.findById(id);
+		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		return new UserDTO(entity);
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = repository.findByEmail(username);
-		
-		if(user == null) {
+
+		if (user == null) {
 			logger.error("User not found: " + username);
 			throw new UsernameNotFoundException("Email not found!");
 		}
 		logger.info("User found: " + username);
 		return user;
 	}
-
-	
 
 }
