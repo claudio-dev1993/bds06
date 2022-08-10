@@ -2,6 +2,9 @@ package com.devsuperior.movieflix.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import com.devsuperior.movieflix.entities.Review;
 
 public class ReviewDTO implements Serializable {
@@ -9,9 +12,12 @@ public class ReviewDTO implements Serializable {
 
   
     private Long id;
+
+    @NotBlank(message = "Não pode inserir um em branco!")
     private String text;
 
-    private MovieDTO movie;
+    @NotNull(message = "Não pode inserir um id nulo!" )
+    private Long movieId;
 
     private UserDTO user;
 
@@ -19,17 +25,20 @@ public class ReviewDTO implements Serializable {
 
     }
 
-    public ReviewDTO(Long id, String text) {
+    public ReviewDTO(Long id, String text, Long movieId, UserDTO user) {
         this.id = id;
         this.text = text;
+        this.movieId = movieId;
+        this.user = user;
     }
 
     public ReviewDTO(Review entity) {
         id = entity.getId();
         text = entity.getText();
-        movie = new MovieDTO(entity.getMovie());
+        movieId = entity.getMovie().getId();
         user = new UserDTO(entity.getUser());
     }
+
 
     public Long getId() {
         return id;
@@ -47,14 +56,6 @@ public class ReviewDTO implements Serializable {
         this.text = text;
     }
 
-    public MovieDTO getMovie() {
-        return movie;
-    }
-
-    public void setMovie(MovieDTO movie) {
-        this.movie = movie;
-    }
-
     public UserDTO getUser() {
         return user;
     }
@@ -63,11 +64,13 @@ public class ReviewDTO implements Serializable {
         this.user = user;
     }
 
-    public void setMovieId(long id) {
-        this.movie.setId(id);
+    public Long getMovieId() {
+        return movieId;
     }
 
-   
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
+    }
 
     
 }

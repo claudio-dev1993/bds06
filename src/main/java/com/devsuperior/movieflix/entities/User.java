@@ -23,6 +23,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.devsuperior.movieflix.dto.UserDTO;
+
 @Entity
 @Table(name = "tb_user")
 public class User implements  UserDetails {
@@ -53,6 +55,12 @@ public class User implements  UserDetails {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public User(UserDTO dto) {
+        id = dto.getId();
+        name = dto.getName();
+        email = dto.getEmail();
     }
 
     public Long getId() {
