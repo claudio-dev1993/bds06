@@ -1,5 +1,8 @@
 package com.devsuperior.movieflix.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +30,7 @@ public class ReviewService {
     @Autowired
     private AuthService authService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ReviewDTO insertReview(ReviewDTO dto) {
         Movie movie = (dto.getMovieId() == 0 ) ? null : movieRepository.getOne(dto.getMovieId());
         User user = userRepository.getOne(authService.authenticated().getId());
@@ -39,6 +42,12 @@ public class ReviewService {
         review = reviewRepository.save(review);
 
         return new ReviewDTO(review);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDTO> findMovieReview(Long id) {
+        List<Review> list = reviewRepository.findReviewList(id);
+        return list.stream().map(x -> new ReviewDTO(x)).collect(Collectors.toList());
     }
 
     
